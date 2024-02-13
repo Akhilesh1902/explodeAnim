@@ -6,6 +6,7 @@ Command: npx gltfjsx@6.2.16 ./public/models/sphere.glb -o Sphere.jsx -r public
 import React, { useRef } from 'react';
 import { useGLTF } from '@react-three/drei';
 import { useExplode } from '../hooks/useExplode';
+import { useFrame } from '@react-three/fiber';
 
 export function Sphere(props) {
   const { nodes, materials } = useGLTF('/models/sphere.glb');
@@ -15,6 +16,7 @@ export function Sphere(props) {
   useExplode(group, {
     distance: 6,
   });
+
   return (
     <group
       ref={group}
