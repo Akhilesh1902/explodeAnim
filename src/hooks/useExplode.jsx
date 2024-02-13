@@ -1,8 +1,8 @@
-import { useScroll } from "@react-three/drei";
-import { useFrame } from "@react-three/fiber";
-import { useEffect } from "react";
+import { useScroll } from '@react-three/drei';
+import { useFrame } from '@react-three/fiber';
+import { useEffect } from 'react';
 
-import * as THREE from "three";
+import * as THREE from 'three';
 
 export const useExplode = (group, { distance = 3, enableRotation = true }) => {
   useEffect(() => {
@@ -18,7 +18,7 @@ export const useExplode = (group, { distance = 3, enableRotation = true }) => {
         .clone()
         .sub(groupWorldPosition)
         .normalize();
-
+      mesh.offsetMultiplier = Math.random();
       mesh.originalRotation = mesh.rotation.clone();
       mesh.targetRotation = new THREE.Euler(
         Math.random() * Math.PI,
@@ -38,38 +38,63 @@ export const useExplode = (group, { distance = 3, enableRotation = true }) => {
 
   const scrollData = useScroll();
 
-  useFrame(() => {
+  useFrame(({ clock }) => {
     group.current.children.forEach((mesh) => {
       if (scrollData.offset < 0.0001) {
-        if (mesh.name === "origin") {
+        if (mesh.name === 'origin') {
           mesh.visible = true;
         } else {
-          mesh.visible = false;
+          // mesh.visible = false;
         }
       } else {
-        if (mesh.name === "origin") {
+        if (mesh.name === 'origin') {
           mesh.visible = false;
         } else {
           mesh.visible = true;
         }
       }
-
+      // console.log(scrollData.offset);
+      // mesh.targetPosition.z = Math.sin(clock.getElapsedTime());
       mesh.position.x = THREE.MathUtils.lerp(
         mesh.originalPosition.x,
         mesh.targetPosition.x,
         scrollData.offset // 0 at the beginning and 1 after scroll
       );
+
       mesh.position.y = THREE.MathUtils.lerp(
         mesh.originalPosition.y,
         mesh.targetPosition.y,
         scrollData.offset // 0 at the beginning and 1 after scroll
       );
+      // mesh.position.y =
+      //   (Math.abs(Math.sin(clock.getElapsedTime() * mesh.offsetMultiplier)) +
+      //     2) *
+      //   (mesh.position.y / 4);
       mesh.position.z = THREE.MathUtils.lerp(
         mesh.originalPosition.z,
         mesh.targetPosition.z,
         scrollData.offset // 0 at the beginning and 1 after scroll
       );
-
+      if (scrollData.offset < 0.025) {
+        // return;
+        mesh.position.x =
+          mesh.originalPosition.x +
+          (Math.sin(clock.getElapsedTime() * mesh.offsetMultiplier) + 1) *
+            (mesh.position.x / 10);
+        mesh.position.y =
+          mesh.originalPosition.y +
+          Math.abs(
+            Math.sin(clock.getElapsedTime() * mesh.offsetMultiplier) + 1
+          ) *
+            (mesh.position.y / 10);
+        mesh.position.z =
+          mesh.originalPosition.z +
+          Math.abs(
+            Math.sin(clock.getElapsedTime() * mesh.offsetMultiplier) + 1
+          ) *
+            (mesh.position.z / 10);
+      }
+      // mesh.position.x = Math.sin(clock.getElapsedTime());s
       if (enableRotation) {
         mesh.rotation.x = THREE.MathUtils.lerp(
           mesh.originalRotation.x,
