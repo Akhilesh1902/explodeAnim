@@ -82,19 +82,19 @@ export const useExplode = (group, { distance = 3, enableRotation = true }) => {
           Math.abs(
             Math.sin((clock.getElapsedTime() * mesh.offsetMultiplier) / 0.5) + 1
           ) *
-            (mesh.position.x / 20);
+            (mesh.position.x / 10);
         mesh.position.y =
           mesh.originalPosition.y +
           Math.abs(
             Math.sin((clock.getElapsedTime() * mesh.offsetMultiplier) / 0.5) + 1
           ) *
-            (mesh.position.y / 20);
+            (mesh.position.y / 10);
         mesh.position.z =
           mesh.originalPosition.z +
           Math.abs(
             Math.sin((clock.getElapsedTime() * mesh.offsetMultiplier) / 0.5) + 1
           ) *
-            (mesh.position.z / 20);
+            (mesh.position.z / 10);
       }
       // mesh.position.x = Math.sin(clock.getElapsedTime());s
       if (enableRotation) {
